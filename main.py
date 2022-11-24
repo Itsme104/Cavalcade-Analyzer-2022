@@ -139,7 +139,39 @@ def manualSelection(headers, schools, divisions):
           print("Division Not Added.")
     selectedSchools = getDivisionSchools(selectedDivisions, schools, recentScores)
 
+  elif selectionInput == 's':
+    print("Schools:\n", schools,'\n')
+    selectedSchools = []
+    schoolInput = False
+    while schoolInput != '0':
+      schoolInput = (input("Select A School(s). Type 0 To Continue. ")).rstrip()
+      if schoolInput in schools and schoolInput not in selectedSchools:
+        selectedSchools.append(schoolInput)
+        print("School Added.")
+      else:
+        if schoolInput != '0':
+          print("School Not Added.")
+  print()
+  
+  selectionInput = False
+  while selectionInput not in ['y', 'n']:
+    selectionInput = input("Would You Like To Sort By A Category? (Yes Or No) ").lower()[0]
+  print()
+  
+  if selectionInput == 'y':
+    print("Categories:\n", headers,'\n')
+    categoryInput = False
+    while categoryInput not in headers:
+      categoryInput = input("Select A Category To Sort By. ").strip()
+    print()
     
+    rankedSchools = rankSchools(selectedSchools, categoryInput, recentScores)
+    dispSchool(rankedSchools, True, recentScores)
+  
+  if selectionInput == 'n':
+    dispSchool(selectedSchools, False, recentScores)
+
+
 def dataWithPercussion():
   data, headers, schools, divisions = setup('dataWP.csv')
   
@@ -178,71 +210,71 @@ def dataAuxiliary():
     dispSchool(rankedSchoolsAuxiliary, True, recentScores)
   if choice == '2':
     manualSelection(headers, schools, divisions)
+
     
-   
 def northernBreakdown():
   fileName1, fileName2, fileName3 = 'dataWP.csv', 'dataNP.csv', 'dataA.csv'
-    dataWP, null = openFile(fileName1)
-    dataNP, null = openFile(fileName2)
-    dataA , null = openFile(fileName3)
-    dataWP, dataNP, dataA  = cleanData(dataWP), cleanData(dataNP), cleanData(dataA)
-    
-    for entry in dataWP:
-      recentScoresWP[entry['School']] = entry
-    for entry in dataNP:
-      recentScoresNP[entry['School']] = entry
-    for entry in dataA:
-      recentScoresA[entry['School']] = entry
-    
-    for school in recentScoresWP:
-      schoolsWP.append(school)
-    schoolsWP.sort()
-    for school in recentScoresNP:
-      schoolsNP.append(school)
-    schoolsNP.sort()
-    for school in recentScoresA:
-      schoolsA.append(school)
-    schoolsA.sort()
-    
-    divisionsWP, divisionsNP, divisionsA = set(), set(), set()
-    for school in schoolsWP:
-      divisionsWP.add(recentScoresWP[school]['Division'])
-    for school in schoolsNP:
-      divisionsNP.add(recentScoresNP[school]['Division'])
-    for school in schoolsA:
-      divisionsA.add(recentScoresA[school]['Division'])
-    
-    school = "Northern York"
-    dispSchool(school, False, recentScoresWP)
-    
-    
-    selectedSchoolsNP = getDivisionSchools("Yankee A", schoolsNP, recentScoresNP)
-    rankedSchools = rankSchools(selectedSchoolsNP, "Total", recentScoresNP)
-    print(f'{school} Placed {recentScoresNP[school]["Rank"]} Out Of {len(selectedSchoolsNP)} In Yankee A.')
-    
-    rankedSchools = rankSchools(schoolsNP, "Total", recentScoresNP)
-    print(f'{school} Placed {recentScoresNP[school]["Rank"]} Out Of {len(schoolsNP)} Out Of Calvalcade.\n')
-    
-    
-    selectedSchoolsWP = getDivisionSchools("Yankee A", schoolsWP, recentScoresWP)
-    rankedSchools = rankSchools(selectedSchoolsWP, "Total", recentScoresWP)
-    #print(f'{school}\'s Percussion Placed {recentScoresWP[school]["Rank"]} Out Of {len(selectedSchoolsWP)} In Yankee A.')
-    print(f'{school}\'s Percussion Placed 1 Out Of {len(selectedSchoolsWP)} In Yankee A.')
-    
-    rankedSchools = rankSchools(schoolsWP, "Total", recentScoresWP)
-    #print(f'{school}\'s Percussion Placed {recentScoresWP[school]["Rank"]} Out Of {len(schoolsWP)} Out Of Calvalcade.\n')
-    print(f'{school}\'s Percussion Placed 10 Out Of {len(schoolsWP)} Out Of Calvalcade.\n')
-    
-    
-    selectedSchoolsA = getDivisionSchools("Yankee A", schoolsA, recentScoresA)
-    rankedSchools = rankSchools(selectedSchoolsA, "Total", recentScoresA)
-    print(f'{school}\'s Gaurd Placed {recentScoresA[school]["Rank"]} Out Of {len(selectedSchoolsA)} In Yankee A.')
-    
-    rankedSchools = rankSchools(schoolsA, "Total", recentScoresA)
-    #print(f'{school}\'s Gaurd Placed {recentScoresA[school]["Rank"]} Out Of {len(schoolsA)} Out Of Calvalcade.\n')
-    print(f'{school}\'s Gaurd Placed 34 Out Of {len(schoolsA)} Out Of Calvalcade.\n')
-    
-    
+  dataWP, null = openFile(fileName1)
+  dataNP, null = openFile(fileName2)
+  dataA , null = openFile(fileName3)
+  dataWP, dataNP, dataA  = cleanData(dataWP), cleanData(dataNP), cleanData(dataA)
+  
+  for entry in dataWP:
+    recentScoresWP[entry['School']] = entry
+  for entry in dataNP:
+    recentScoresNP[entry['School']] = entry
+  for entry in dataA:
+    recentScoresA[entry['School']] = entry
+  
+  for school in recentScoresWP:
+    schoolsWP.append(school)
+  schoolsWP.sort()
+  for school in recentScoresNP:
+    schoolsNP.append(school)
+  schoolsNP.sort()
+  for school in recentScoresA:
+    schoolsA.append(school)
+  schoolsA.sort()
+  
+  divisionsWP, divisionsNP, divisionsA = set(), set(), set()
+  for school in schoolsWP:
+    divisionsWP.add(recentScoresWP[school]['Division'])
+  for school in schoolsNP:
+    divisionsNP.add(recentScoresNP[school]['Division'])
+  for school in schoolsA:
+    divisionsA.add(recentScoresA[school]['Division'])
+  
+  school = "Northern York"
+  dispSchool(school, False, recentScoresWP)
+  
+  
+  selectedSchoolsNP = getDivisionSchools("Yankee A", schoolsNP, recentScoresNP)
+  rankedSchools = rankSchools(selectedSchoolsNP, "Total", recentScoresNP)
+  print(f'{school} Placed {recentScoresNP[school]["Rank"]} Out Of {len(selectedSchoolsNP)} In Yankee A.')
+  
+  rankedSchools = rankSchools(schoolsNP, "Total", recentScoresNP)
+  print(f'{school} Placed {recentScoresNP[school]["Rank"]} Out Of {len(schoolsNP)} Out Of Calvalcade.\n')
+  
+  
+  selectedSchoolsWP = getDivisionSchools("Yankee A", schoolsWP, recentScoresWP)
+  rankedSchools = rankSchools(selectedSchoolsWP, "Total", recentScoresWP)
+  #print(f'{school}\'s Percussion Placed {recentScoresWP[school]["Rank"]} Out Of {len(selectedSchoolsWP)} In Yankee A.')
+  print(f'{school}\'s Percussion Placed 1 Out Of {len(selectedSchoolsWP)} In Yankee A.')
+  
+  rankedSchools = rankSchools(schoolsWP, "Total", recentScoresWP)
+  #print(f'{school}\'s Percussion Placed {recentScoresWP[school]["Rank"]} Out Of {len(schoolsWP)} Out Of Calvalcade.\n')
+  print(f'{school}\'s Percussion Placed 10 Out Of {len(schoolsWP)} Out Of Calvalcade.\n')
+  
+  
+  selectedSchoolsA = getDivisionSchools("Yankee A", schoolsA, recentScoresA)
+  rankedSchools = rankSchools(selectedSchoolsA, "Total", recentScoresA)
+  print(f'{school}\'s Gaurd Placed {recentScoresA[school]["Rank"]} Out Of {len(selectedSchoolsA)} In Yankee A.')
+  
+  rankedSchools = rankSchools(schoolsA, "Total", recentScoresA)
+  #print(f'{school}\'s Gaurd Placed {recentScoresA[school]["Rank"]} Out Of {len(schoolsA)} Out Of Calvalcade.\n')
+  print(f'{school}\'s Gaurd Placed 34 Out Of {len(schoolsA)} Out Of Calvalcade.\n')
+  
+
 def main():
   choice = False
   while choice not in ['1', '2']:
