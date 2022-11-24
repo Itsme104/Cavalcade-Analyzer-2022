@@ -1,6 +1,6 @@
 # Ignore The Jank Code
 
-import csv, time, os
+import csv, os
 
 recentScoresWP, recentScoresNP, recentScoresA = dict(), dict(), dict()
 schoolsWP, schoolsNP, schoolsA = [], [], []
@@ -304,4 +304,4 @@ if __name__ == '__main__':
     main()
   except:
     print("Error Code: 1")
-  time.sleep(86400)
+  input("Press Enter To Close Program.")
