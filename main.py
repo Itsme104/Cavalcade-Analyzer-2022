@@ -323,14 +323,8 @@ def dataAuxiliary():
     if selectionInput == 'n':
       dispSchool(selectedSchools, False, recentScores)
     
-    
-def main():
-  choice = False
-  while choice not in ['1', '2']:
-    choice = input("Type 1 For Northern York Breakdown Or 2 For Manual Selection. ")
-    
-  if choice == '1':
-    fileName1, fileName2, fileName3 = 'dataWP.csv', 'dataNP.csv', 'dataA.csv'
+def northernBreakdown():
+  fileName1, fileName2, fileName3 = 'dataWP.csv', 'dataNP.csv', 'dataA.csv'
     dataWP, null = openFile(fileName1)
     dataNP, null = openFile(fileName2)
     dataA , null = openFile(fileName3)
@@ -390,7 +384,15 @@ def main():
     rankedSchools = rankSchools(schoolsA, "Total", recentScoresA)
     #print(f'{school}\'s Gaurd Placed {recentScoresA[school]["Rank"]} Out Of {len(schoolsA)} Out Of Calvalcade.\n')
     print(f'{school}\'s Gaurd Placed 34 Out Of {len(schoolsA)} Out Of Calvalcade.\n')
-  
+    
+    
+def main():
+  choice = False
+  while choice not in ['1', '2']:
+    choice = input("Type 1 For Northern York Breakdown Or 2 For Manual Selection. ")
+    
+  if choice == '1':
+    northernBreakdown()
   
   if choice == '2':
     print("Databases:\n\t1: Comps With Percussion Judges\n\t2: Comps With No Special Judges\n\t3: Comps With Auxiliary Judges")
@@ -405,7 +407,6 @@ def main():
       dataNoPercussion()
     elif selectionInput == '3':
       dataAuxiliary()
-  
   
   
 if __name__ == '__main__':
