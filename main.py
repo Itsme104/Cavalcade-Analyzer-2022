@@ -103,8 +103,7 @@ def rankSchools(schools, selection, dataBase):
   return selectedSchools
 
 
-def dataWithPercussion():
-  fileName = 'dataWP.csv'
+def setup(fileName):
   data, headers = openFile(fileName)
   data  = cleanData(data)
   for entry in data:
@@ -115,214 +114,72 @@ def dataWithPercussion():
   divisions = set()
   for school in schools:
     divisions.add(recentScores[school]['Division'])
+  return data, headers, schools, divisions
+
+
+def manualSelection(headers, schools, divisions):
+  print("Note: All Selections Are Case Sensitive.\n")
+  
+  selectionInput = False
+  while selectionInput not in ['s', 'd']:
+    selectionInput = input("Would You Like To Sort By School(s) Or Division(s)? ").lower()[0]
+  print()
+  
+  if selectionInput == 'd':
+    print("Divisions:\n", divisions,'\n')
+    selectedDivisions = []
+    divisionInput = False
+    while divisionInput != '0':
+      divisionInput = (input("Select A Divison(s). Type 0 To Continue. ")).rstrip()
+      if divisionInput in divisions and divisionInput not in selectedDivisions:
+        selectedDivisions.append(divisionInput)
+        print("Division Added.")
+      else:
+        if divisionInput != '0':
+          print("Division Not Added.")
+    selectedSchools = getDivisionSchools(selectedDivisions, schools, recentScores)
+
+    
+def dataWithPercussion():
+  data, headers, schools, divisions = setup('dataWP.csv')
   
   choice = False
   while choice not in ['1', '2']:
     choice = input("Type 1 For Schools Ranked By Percussion Or 2 For Manual Selection. ")
+
   if choice == '1':
     rankedSchoolsPercussion = rankSchools(schools, "Percussion", recentScores)
     dispSchool(rankedSchoolsPercussion, True, recentScores)
-  
   if choice == '2':
-    print("Note: All Selections Are Case Sensitive.\n")
-    
-    selectionInput = False
-    while selectionInput not in ['s', 'd']:
-      selectionInput = input("Would You Like To Sort By School(s) Or Division(s)? ").lower()[0]
-    print()
-    
-    if selectionInput == 'd':
-      print("Divisions:\n", divisions,'\n')
-      selectedDivisions = []
-      divisionInput = False
-      while divisionInput != '0':
-        divisionInput = (input("Select A Divison(s). Type 0 To Continue. ")).rstrip()
-        if divisionInput in divisions and divisionInput not in selectedDivisions:
-          selectedDivisions.append(divisionInput)
-          print("Division Added.")
-        else:
-          if divisionInput != '0':
-            print("Division Not Added.")
-      selectedSchools = getDivisionSchools(selectedDivisions, schools, recentScores)
-
-    elif selectionInput == 's':
-      print("Schools:\n", schools,'\n')
-      selectedSchools = []
-      schoolInput = False
-      while schoolInput != '0':
-        schoolInput = (input("Select A School(s). Type 0 To Continue. ")).rstrip()
-        if schoolInput in schools and schoolInput not in selectedSchools:
-          selectedSchools.append(schoolInput)
-          print("School Added.")
-        else:
-          if schoolInput != '0':
-            print("School Not Added.")
-    print()
-    
-    selectionInput = False
-    while selectionInput not in ['y', 'n']:
-      selectionInput = input("Would You Like To Sort By A Category? (Yes Or No) ").lower()[0]
-    print()
-    
-    if selectionInput == 'y':
-      print("Categories:\n", headers,'\n')
-      categoryInput = False
-      while categoryInput not in headers:
-        categoryInput = input("Select A Category To Sort By. ").strip()
-      print()
-      
-      rankedSchools = rankSchools(selectedSchools, categoryInput, recentScores)
-      dispSchool(rankedSchools, True, recentScores)
-    
-    if selectionInput == 'n':
-      dispSchool(selectedSchools, False, recentScores)
+    manualSelection(headers, schools, divisions)
     
 def dataNoPercussion():
-  data, headers = openFile('dataNP.csv')
-  data  = cleanData(data)
-  for entry in data:
-    recentScores[entry['School']] = entry
-  for school in recentScores:
-    schools.append(school)
-  schools.sort()
-  divisions = set()
-  for school in schools:
-    divisions.add(recentScores[school]['Division'])
+  data, headers, schools, divisions = setup('dataNP.csv')
     
   choice = False
   while choice not in ['1', '2']:
     choice = input("Type 1 For All Schools Ranked Or 2 For Manual Selection. ")
+  
   if choice == '1':
     rankedSchoolsTotal = rankSchools(schools, "Total", recentScores)
     dispSchool(rankedSchoolsTotal, True, recentScores)
-  
   if choice == '2':
-    print("Note: All Selections Are Case Sensitive.\n")
-    
-    selectionInput = False
-    while selectionInput not in ['s', 'd']:
-      selectionInput = input("Would You Like To Sort By School(s) Or Division(s)? ").lower()[0]
-    print()
-    
-    if selectionInput == 'd':
-      print("Divisions:\n", divisions,'\n')
-      selectedDivisions = []
-      divisionInput = False
-      while divisionInput != '0':
-        divisionInput = (input("Select A Divison(s). Type 0 To Continue. ")).rstrip()
-        if divisionInput in divisions and divisionInput not in selectedDivisions:
-          selectedDivisions.append(divisionInput)
-          print("Division Added.")
-        else:
-          if divisionInput != '0':
-            print("Division Not Added.")
-      selectedSchools = getDivisionSchools(selectedDivisions, schools, recentScores)
-
-    elif selectionInput == 's':
-      print("Schools:\n", schools,'\n')
-      selectedSchools = []
-      schoolInput = False
-      while schoolInput != '0':
-        schoolInput = (input("Select A School(s). Type 0 To Continue. ")).rstrip()
-        if schoolInput in schools and schoolInput not in selectedSchools:
-          selectedSchools.append(schoolInput)
-          print("School Added.")
-        else:
-          if schoolInput != '0':
-            print("School Not Added.")
-    print()
-    
-    selectionInput = False
-    while selectionInput not in ['y', 'n']:
-      selectionInput = input("Would You Like To Sort By A Category? (Yes Or No) ").lower()[0]
-    print()
-    
-    if selectionInput == 'y':
-      print("Categories:\n", headers,'\n')
-      categoryInput = False
-      while categoryInput not in headers:
-        categoryInput = input("Select A Category To Sort By. ")
-      print()
-      
-      rankedSchools = rankSchools(selectedSchools, categoryInput, recentScores)
-      dispSchool(rankedSchools, True, recentScores)
-    
-    if selectionInput == 'n':
-      dispSchool(selectedSchools, False, recentScores)
+    manualSelection(headers, schools, divisions)
 
 def dataAuxiliary():
-  data, headers = openFile('dataA.csv')
-  data  = cleanData(data)
-  for entry in data:
-    recentScores[entry['School']] = entry
-  for school in recentScores:
-    schools.append(school)
-  schools.sort()
-  divisions = set()
-  for school in schools:
-    divisions.add(recentScores[school]['Division'])
-    
+  data, headers, schools, divisions = setup('dataA.csv')
+  
   choice = False
   while choice not in ['1', '2']:
     choice = input("Type 1 For All Schools Ranked By Auxiliary Or 2 For Manual Selection. ")
+
   if choice == '1':
     rankedSchoolsAuxiliary = rankSchools(schools, "Auxiliary", recentScores)
     dispSchool(rankedSchoolsAuxiliary, True, recentScores)
-  
   if choice == '2':
-    print("Note: All Selections Are Case Sensitive.\n")
+    manualSelection(headers, schools, divisions)
     
-    selectionInput = False
-    while selectionInput not in ['s', 'd']:
-      selectionInput = input("Would You Like To Sort By School(s) Or Division(s)? ").lower()[0]
-    print()
-    
-    if selectionInput == 'd':
-      print("Divisions:\n", divisions,'\n')
-      selectedDivisions = []
-      divisionInput = False
-      while divisionInput != '0':
-        divisionInput = (input("Select A Divison(s). Type 0 To Continue. ")).rstrip()
-        if divisionInput in divisions and divisionInput not in selectedDivisions:
-          selectedDivisions.append(divisionInput)
-          print("Division Added.")
-        else:
-          if divisionInput != '0':
-            print("Division Not Added.")
-      selectedSchools = getDivisionSchools(selectedDivisions, schools, recentScores)
-
-    elif selectionInput == 's':
-      print("Schools:\n", schools,'\n')
-      selectedSchools = []
-      schoolInput = False
-      while schoolInput != '0':
-        schoolInput = (input("Select A School(s). Type 0 To Continue. ")).rstrip()
-        if schoolInput in schools and schoolInput not in selectedSchools:
-          selectedSchools.append(schoolInput)
-          print("School Added.")
-        else:
-          if schoolInput != '0':
-            print("School Not Added.")
-    print()
-    
-    selectionInput = False
-    while selectionInput not in ['y', 'n']:
-      selectionInput = input("Would You Like To Sort By A Category? (Yes Or No) ").lower()[0]
-    print()
-    
-    if selectionInput == 'y':
-      print("Categories:\n", headers,'\n')
-      categoryInput = False
-      while categoryInput not in headers:
-        categoryInput = input("Select A Category To Sort By. ")
-      print()
-      
-      rankedSchools = rankSchools(selectedSchools, categoryInput, recentScores)
-      dispSchool(rankedSchools, True, recentScores)
-    
-    if selectionInput == 'n':
-      dispSchool(selectedSchools, False, recentScores)
-    
+   
 def northernBreakdown():
   fileName1, fileName2, fileName3 = 'dataWP.csv', 'dataNP.csv', 'dataA.csv'
     dataWP, null = openFile(fileName1)
