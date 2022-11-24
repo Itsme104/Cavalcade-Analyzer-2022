@@ -1,6 +1,6 @@
 # Ignore The Jank Code
 
-import csv, os
+import csvLite, os
 
 recentScoresWP, recentScoresNP, recentScoresA = dict(), dict(), dict()
 schoolsWP, schoolsNP, schoolsA = [], [], []
@@ -11,7 +11,7 @@ schools = []
 
 def openFile(fileName):
   with open(os.path.join(os.sys.path[0], fileName), 'r') as infile:
-    d_Reader = csv.DictReader(infile)
+    d_Reader = csvLite.DictReader(infile)
     data = []
     for row in d_Reader:
       data.append(row)
